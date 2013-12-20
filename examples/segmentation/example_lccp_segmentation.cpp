@@ -300,7 +300,6 @@ bool output_specified = pcl::console::find_switch (argc, argv, "-o");
     float  concavity_tolerance_threshold = 10;
     uint32_t  filter_size = 0;
     bool use_extended_convexity = false;
-    uint   k_factor = 0;
 
 
 
@@ -317,7 +316,8 @@ bool output_specified = pcl::console::find_switch (argc, argv, "-o");
 
     // Segmentation Stuff
     pcl::console::parse(argc, argv, "-ct", concavity_tolerance_threshold);
-    use_extended_convexity =  pcl::console::parse(argc, argv, "-ec", k_factor);
+    use_extended_convexity =  pcl::console::find_switch(argc, argv, "-ec");
+    uint   k_factor = 0;
     if(use_extended_convexity) k_factor = 1;
     pcl::console::parse(argc, argv, "-smooth", filter_size);
 
