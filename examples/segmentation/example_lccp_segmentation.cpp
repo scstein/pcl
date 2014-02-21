@@ -154,6 +154,7 @@ main(int argc, char ** argv)
     -refine - Use supervoxel refinement\n\
  LCCPSegmentation Parameters: \n\
     -ct - <concavity tolerance angle> \n\
+    -st - <smoothness threshold> - Invalidated steps. Value from the interval [0,1], where 0 is the strictest and 1 equals 'no smoothness check.' \n\
     -ec - use extended (less local) convexity check\n\
     -smooth <filter size>  - filter the resulting image\n\
     \n", argv[0]);
@@ -298,6 +299,7 @@ bool output_specified = pcl::console::find_switch (argc, argv, "-o");
 
     // Segmentation Stuff
     float  concavity_tolerance_threshold = 10;
+    float smoothness_threshold = 0.1;
     uint32_t  filter_size = 0;
     bool use_extended_convexity = false;
 
@@ -316,6 +318,7 @@ bool output_specified = pcl::console::find_switch (argc, argv, "-o");
 
     // Segmentation Stuff
     pcl::console::parse(argc, argv, "-ct", concavity_tolerance_threshold);
+    pcl::console::parse(argc, argv, "-st", smoothness_threshold);
     use_extended_convexity =  pcl::console::find_switch(argc, argv, "-ec");
     uint   k_factor = 0;
     if(use_extended_convexity) k_factor = 1;
@@ -363,7 +366,7 @@ bool output_specified = pcl::console::find_switch (argc, argv, "-o");
     std::cout << "Starting Segmentation.. " << std::endl;
     pcl::LCCPSegmentation<PointT> svccSeg;
     svccSeg.setConcavityToleranceThreshold(concavity_tolerance_threshold);
-    svccSeg.setSmoothnessCheck(true, voxel_resolution, seed_resolution);
+    svccSeg.setSmoothnessCheck(true, voxel_resolution, seed_resolution, smoothness_threshold);
     svccSeg.setKFactor(k_factor);
 
     svccSeg.segment(supervoxel_clusters, supervoxel_adjacency);
